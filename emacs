@@ -2,7 +2,6 @@
                       company-quickhelp ;; methods and variables info in autocomplete
                       neotree ;; file tree by F3
                       evil    ;; vim bindings
-                      evil-nerd-commenter ;; commenter 
                       evil-leader  ;; vim leader button
                       evil-search-highlight-persist ;; vim search highlight
                       projectile ;; fuzzy find files
@@ -51,10 +50,6 @@
 
 ;; company quickhelp
 (company-quickhelp-mode 1)
-
-;; nerd commenter
-(global-set-key (kbd "C-\\") 'evilnc-comment-or-uncomment-lines)
-(evilnc-default-hotkeys)
 
 ;; evil mode
 (require 'evil)
@@ -161,6 +156,8 @@
 
 (setq inhibit-startup-message t) ;; disable start message
 (setq frame-title-format "emacs") ;; set title format
+(setq x-select-enable-clipboard nil) ;; enable clipboard
+(fset 'evil-visual-update-x-selection 'ignore)
 
 ;;gradle errors highlight
 (add-to-list 'compilation-error-regexp-alist
