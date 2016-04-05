@@ -15,6 +15,7 @@
                       powerline ;; powerline mode
                       powerline-evil ;; powerline with vim bindings
                       idea-darkula-theme ;; color theme like intellij idea
+                      linum-relative ;; relative line numbers 
                       ))
 
 (require 'cl)
@@ -27,7 +28,6 @@
 ;;local libs and themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-
 
 (package-initialize)
 
@@ -125,13 +125,22 @@
               company-selection-wrap-around t ;; loop over candidates
               )
 (eval-after-load 'company  '(progn
-                              (define-key company-active-map (kbd "TAB") 'company-select-next)
+                              (define-key company-active-map (kbd "TAB") 'company-select-next) ;; choose candidate by tab
+                              (define-key company-active-map (kbd "M-j") 'company-select-next) ;; alt-j
+                              (define-key company-active-map (kbd "M-k") 'company-select-previous) ;; and alt-k
                               (define-key company-active-map [tab] 'company-select-next)))
 
 (add-to-list 'company-backends 'company-shell) ;; shell script completion
 
 ;;autopair
 (autopair-global-mode)
+
+;; line numbers
+(require 'linum-relative)
+(setq linum-format "%4d \u2502 ")
+(setq linum-relative-format "%4s \u2502 ")
+(linum-relative-global-mode)
+;; (global-linum-mode)
 
 (define-key global-map (kbd "RET") 'newline-and-indent) ;; autoindent
 (setq-default indent-tabs-mode nil) ;; disable tabs
@@ -140,8 +149,8 @@
 (tool-bar-mode -1) ;; disable tool-bar
 (show-paren-mode 1) ;; pair bracers
 (column-number-mode 1) ;; line numbers
-(global-linum-mode 1) 
-;; (global-hl-line-mode 1) ;; current line
+(global-hl-line-mode 0) ;; current line
+(set-face-background hl-line-face "light gray") ;; current line color
 
 ;; remember cursor position
 (if (version< emacs-version "25.0")
