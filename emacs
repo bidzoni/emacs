@@ -20,8 +20,6 @@
 ;;package repositories
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
 
 ;;local libs and themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
