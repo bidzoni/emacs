@@ -11,8 +11,11 @@
                       autopair ;; autopair bracers 
                       smex ;; ido-style M-x complete
                       idomenu  ;; find methods and variables in current buffer (Ctrl-P)
-                      ido-vertical-mode
-                      powerline))
+                      ido-vertical-mode ;; ido menu is vertical now
+                      powerline ;; powerline mode
+                      powerline-evil ;; powerline with vim bindings
+                      idea-darkula-theme ;; color theme like intellij idea
+                      ))
 
 (require 'cl)
 (require 'package)
@@ -36,8 +39,12 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
-;;load good color theme
-(load-theme 'noctilux t)
+(if (display-graphic-p)
+;;    (progn
+      ;; if graphic
+      (load-theme 'caroline t))
+  ;; else 
+;;  (load-theme 'noctilux t))
 
 (require 'smart-tab)
 (global-smart-tab-mode 1)
@@ -61,10 +68,11 @@
 (require 'evil-search-highlight-persist)
 (global-evil-search-highlight-persist t)
 
-;; powerline
+;; smartline (powerline analog)
 (require 'powerline)
-(powerline-default-theme)
-(display-time-mode t)
+(require 'powerline-evil)
+(powerline-evil-center-color-theme)
+(setq powerline-arrow-shape 'curve)
 
 ;; neotree file browser
 (require 'neotree)
@@ -113,13 +121,12 @@
 (setq-default company-minimum-prefix-length 2   ;; minimum prefix character number for auto complete.
               company-idle-delay 0    ;; show tooltip without delay
               company-echo-delay 0    ;; show inline tooltip without delay
-              company-show-numbers t  ;; show numbers in autocomplete popup
-              company-tooltip-align-annotations t ;; align annotations to the right tooltip border.
-              company-tooltip-flip-when-above t
+              company-show-numbers nil  ;; show numbers in autocomplete popup
               company-selection-wrap-around t ;; loop over candidates
               )
-(with-eval-after-load 'company
-  (define-key company-active-map [tab] #'company-select-next)) ;; select next candidate by <tab> button
+(eval-after-load 'company  '(progn
+                              (define-key company-active-map (kbd "TAB") 'company-select-next)
+                              (define-key company-active-map [tab] 'company-select-next)))
 
 (add-to-list 'company-backends 'company-shell) ;; shell script completion
 
@@ -131,10 +138,17 @@
 
 (menu-bar-mode -1) ;; disable menu
 (tool-bar-mode -1) ;; disable tool-bar
-(global-hl-line-mode 1) ;; current line
 (show-paren-mode 1) ;; pair bracers
 (column-number-mode 1) ;; line numbers
 (global-linum-mode 1) 
+;; (global-hl-line-mode 1) ;; current line
+
+;; remember cursor position
+(if (version< emacs-version "25.0")
+    (progn
+      (require 'saveplace)
+      (setq-default save-place t))
+  (save-place-mode 1))
 
 (setq inhibit-startup-message t) ;; disable start message
 (setq frame-title-format "emacs") ;; set title format
@@ -142,4 +156,3 @@
 ;;gradle errors highlight
 (add-to-list 'compilation-error-regexp-alist
              '("^\[ERROR\] \(.*\):\[\([0-9]+\),\([0-9]+\)\]" 1 2 3))
-
