@@ -1,4 +1,5 @@
 (defvar my-packages '(company ;; autocomplete
+                      company-quickhelp ;; methods and variables info in autocomplete
                       neotree ;; file tree by F3
                       evil    ;; vim bindings
                       evil-nerd-commenter ;; commenter 
@@ -42,6 +43,9 @@
 
 (require 'smart-tab)
 (global-smart-tab-mode 1)
+
+;; company quickhelp
+(company-quickhelp-mode 1)
 
 ;; nerd commenter
 (global-set-key (kbd "C-\\") 'evilnc-comment-or-uncomment-lines)
