@@ -4,6 +4,7 @@
                       evil    ;; vim bindings
                       evil-leader  ;; vim leader button
                       evil-search-highlight-persist ;; vim search highlight
+                      evil-surround ;; vim surround functionality
                       projectile ;; fuzzy find files
                       gradle-mode ;; build gradle project
                       groovy-mode ;; groovy syntax
@@ -41,7 +42,7 @@
 (if (display-graphic-p)
 ;;    (progn
       ;; if graphic
-      (load-theme 'caroline t))
+    (load-theme 'caroline t))
   ;; else 
 ;;  (load-theme 'noctilux t))
 
@@ -54,14 +55,17 @@
 ;; evil mode
 (require 'evil)
 (evil-mode 1)
-(eval-after-load "evil-maps"
-  (define-key evil-normal-state-map "\C-n" nil))
-(eval-after-load "evil-maps"
-  (define-key evil-normal-state-map "\C-p" nil))
+(define-key evil-normal-state-map "\C-n" nil)
+(define-key evil-normal-state-map "\C-p" nil)
+(define-key evil-normal-state-map "\S-b" 'ido-switch-buffer)
 
 ;; evil search persist highlight
 (require 'evil-search-highlight-persist)
 (global-evil-search-highlight-persist t)
+
+;; enable surround (try to push ysiW" to surround whole WORLD with ")
+(require 'evil-surround)
+(global-evil-surround-mode 1)
 
 ;; smartline (powerline analog)
 (require 'powerline)
@@ -139,9 +143,9 @@
 
 (define-key global-map (kbd "RET") 'newline-and-indent) ;; autoindent
 (setq-default indent-tabs-mode nil) ;; disable tabs
-
-(menu-bar-mode -1) ;; disable menu
-(tool-bar-mode -1) ;; disable tool-bar
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1)) ;; disable scroll-bar
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1)) ;; disable tool-bar
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1)) ;; disable menu-bar
 (show-paren-mode 1) ;; pair bracers
 (column-number-mode 1) ;; line numbers
 (global-hl-line-mode 0) ;; current line
@@ -162,3 +166,23 @@
 ;;gradle errors highlight
 (add-to-list 'compilation-error-regexp-alist
              '("^\[ERROR\] \(.*\):\[\([0-9]+\),\([0-9]+\)\]" 1 2 3))
+
+;; email for wanderlust (disabled now)
+;; (setq elmo-imap4-default-server "mail.nic.ru"
+;;       elmo-imap4-default-user "agraschenkov@wildred.ru"
+;;       elmo-imap4-default-authenticate-type 'clear
+;;       elmo-imap4-default-port '993
+;;       elmo-imap4-default-stream-type 'ssl
+;;       elmo-imap4-use-modified-utf7 t)
+
+;; (setq wl-smtp-connection-type 'ssl
+;;       wl-smtp-posting-port 465
+;;       wl-smtp-authenticate-type "plain"
+;;       wl-smtp-posting-user "agraschenkov@wildred.ru"
+;;       wl-smtp-posting-server "mail.nic.ru"
+;;       wl-local-domain "nic.ru"
+;;       wl-message-id-domain "mail.nic.ru")
+
+;; (setq wl-from "Anton Graschenkov <agraschenkov@wildred.ru>"
+;;       wl-fcc-force-as-read    t
+;;       wl-default-spec "%")
