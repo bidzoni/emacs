@@ -58,6 +58,8 @@
 (define-key evil-normal-state-map "\C-n" nil)
 (define-key evil-normal-state-map "\C-p" nil)
 (define-key evil-normal-state-map "\S-b" 'ido-switch-buffer)
+(define-key evil-normal-state-map "\C-u" 'evil-scroll-up)
+(define-key evil-normal-state-map " " 'evil-scroll-down)
 
 ;; evil search persist highlight
 (require 'evil-search-highlight-persist)
