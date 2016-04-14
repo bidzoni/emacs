@@ -3,6 +3,7 @@
                       neotree ;; file tree by F3
                       evil    ;; vim bindings
                       evil-leader  ;; vim leader button
+                      evil-org     ;; vim bindings for org mode
                       evil-search-highlight-persist ;; vim search highlight
                       evil-surround ;; vim surround functionality
                       projectile ;; fuzzy find files
@@ -39,12 +40,11 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
+;; load idea-like theme in graphics mode
 (if (display-graphic-p)
-;;    (progn
-      ;; if graphic
-    (load-theme 'caroline t))
-  ;; else 
-;;  (load-theme 'noctilux t))
+    (load-theme 'idea-darkula t)
+    (set-default-font "Ubuntu Mono-10")
+)
 
 (require 'smart-tab)
 (global-smart-tab-mode 1)
@@ -52,14 +52,25 @@
 ;; company quickhelp
 (company-quickhelp-mode 1)
 
+;; enable evil leader button
+(global-evil-leader-mode)
+(evil-leader/set-leader "<SPC>")
+(evil-leader/set-key
+ "f" 'find-file ;; find file
+ "b" 'ido-switch-buffer ;; switch buffers with menu
+ "k" 'kill-buffer ;; kill buffer
+ "<SPC>" 'evil-scroll-down ;; scroll down one screen
+)
+
 ;; evil mode
 (require 'evil)
 (evil-mode 1)
+;; (define-key evil-normal-state-map "\S-b" 'ido-switch-buffer)
 (define-key evil-normal-state-map "\C-n" nil)
 (define-key evil-normal-state-map "\C-p" nil)
-(define-key evil-normal-state-map "\S-b" 'ido-switch-buffer)
 (define-key evil-normal-state-map "\C-u" 'evil-scroll-up)
-(define-key evil-normal-state-map " " 'evil-scroll-down)
+(define-key evil-normal-state-map "j" 'evil-next-visual-line)
+(define-key evil-normal-state-map "k" 'evil-previous-visual-line)
 
 ;; evil search persist highlight
 (require 'evil-search-highlight-persist)
@@ -68,6 +79,8 @@
 ;; enable surround (try to push ysiW" to surround whole WORLD with ")
 (require 'evil-surround)
 (global-evil-surround-mode 1)
+
+(require 'evil-org)
 
 ;; smartline (powerline analog)
 (require 'powerline)
@@ -165,26 +178,26 @@
 (setq x-select-enable-clipboard nil) ;; enable clipboard
 (fset 'evil-visual-update-x-selection 'ignore)
 
-;;gradle errors highlight
+;; gradle errors highlight
 (add-to-list 'compilation-error-regexp-alist
              '("^\[ERROR\] \(.*\):\[\([0-9]+\),\([0-9]+\)\]" 1 2 3))
 
-;; email for wanderlust (disabled now)
-;; (setq elmo-imap4-default-server "mail.nic.ru"
-;;       elmo-imap4-default-user "agraschenkov@wildred.ru"
-;;       elmo-imap4-default-authenticate-type 'clear
-;;       elmo-imap4-default-port '993
-;;       elmo-imap4-default-stream-type 'ssl
-;;       elmo-imap4-use-modified-utf7 t)
+;; email client wanderlust (disabled now)
+(setq elmo-imap4-default-server "mail.nic.ru"
+      elmo-imap4-default-user "agraschenkov@wildred.ru"
+      elmo-imap4-default-authenticate-type 'clear
+      elmo-imap4-default-port '993
+      elmo-imap4-default-stream-type 'ssl
+      elmo-imap4-use-modified-utf7 t)
 
-;; (setq wl-smtp-connection-type 'ssl
-;;       wl-smtp-posting-port 465
-;;       wl-smtp-authenticate-type "plain"
-;;       wl-smtp-posting-user "agraschenkov@wildred.ru"
-;;       wl-smtp-posting-server "mail.nic.ru"
-;;       wl-local-domain "nic.ru"
-;;       wl-message-id-domain "mail.nic.ru")
+(setq wl-smtp-connection-type 'ssl
+      wl-smtp-posting-port 465
+      wl-smtp-authenticate-type "plain"
+      wl-smtp-posting-user "agraschenkov@wildred.ru"
+      wl-smtp-posting-server "mail.nic.ru"
+      wl-local-domain "nic.ru"
+      wl-message-id-domain "mail.nic.ru")
 
-;; (setq wl-from "Anton Graschenkov <agraschenkov@wildred.ru>"
-;;       wl-fcc-force-as-read    t
-;;       wl-default-spec "%")
+(setq wl-from "Anton Graschenkov <agraschenkov@wildred.ru>"
+      wl-fcc-force-as-read    t
+      wl-default-spec "%")
