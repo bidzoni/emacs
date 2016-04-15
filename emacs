@@ -81,6 +81,12 @@
 (global-evil-surround-mode 1)
 
 (require 'evil-org)
+(setq org-todo-keywords '((sequence "TODO" "IN_PROGRESS" "|" "DONE"))) ;; TODO workflow
+(setq org-todo-keyword-faces
+      '(("TODO" . org-warning)
+        ("IN_PROGRESS" . "yellow")
+        ("DONE" . "green")))
+(setq org-log-done 'time) ;; time on close todo entry
 
 ;; smartline (powerline analog)
 (require 'powerline)
@@ -131,6 +137,7 @@
 
 ;; company-mode (autocomplete engine)
 (require 'company)
+(setq company-dabbrev-downcase 'nil)
 (add-hook 'after-init-hook 'global-company-mode) ;; company always enabled
 (setq-default company-minimum-prefix-length 2   ;; minimum prefix character number for auto complete.
               company-idle-delay 0    ;; show tooltip without delay
@@ -145,6 +152,7 @@
                               (define-key company-active-map [tab] 'company-select-next)))
 
 (add-to-list 'company-backends 'company-shell) ;; shell script completion
+(add-to-list 'company-backends 'company-capf) ;; org completion
 
 ;;autopair
 (autopair-global-mode)
