@@ -179,6 +179,7 @@
 (show-paren-mode 1) ;; pair bracers
 (column-number-mode 1) ;; line numbers
 (global-hl-line-mode 1) ;; current line
+(visual-line-mode 1) ;; wrap long lines
 (set-face-background hl-line-face "light gray") ;; current line color
 
 ;; remember cursor position
