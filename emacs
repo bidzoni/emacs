@@ -59,6 +59,8 @@
  "f" 'find-file ;; find file
  "b" 'ido-switch-buffer ;; switch buffers with menu
  "k" 'kill-buffer ;; kill buffer
+ "m" 'idomenu ;; goto method
+ "c" 'projectile-find-file ;; goto project class (file)
  "<SPC>" 'evil-scroll-down ;; scroll down one screen
 )
 
@@ -71,6 +73,11 @@
 (define-key evil-normal-state-map "\C-u" 'evil-scroll-up)
 (define-key evil-normal-state-map "j" 'evil-next-visual-line)
 (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
+;; insert mode motoin
+(define-key evil-insert-state-map "\M-k" 'evil-previous-visual-line)
+(define-key evil-insert-state-map "\M-j" 'evil-next-visual-line)
+(define-key evil-insert-state-map "\M-l" 'evil-forward-char)
+(define-key evil-insert-state-map "\M-h" 'evil-backward-char)
 
 ;; evil search persist highlight
 (require 'evil-search-highlight-persist)
@@ -171,7 +178,7 @@
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1)) ;; disable menu-bar
 (show-paren-mode 1) ;; pair bracers
 (column-number-mode 1) ;; line numbers
-(global-hl-line-mode 0) ;; current line
+(global-hl-line-mode 1) ;; current line
 (set-face-background hl-line-face "light gray") ;; current line color
 
 ;; remember cursor position
@@ -183,7 +190,8 @@
 
 (setq inhibit-startup-message t) ;; disable start message
 (setq frame-title-format "emacs") ;; set title format
-(setq x-select-enable-clipboard nil) ;; enable clipboard
+(setq x-select-enable-clipboard t)
+(setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
 (fset 'evil-visual-update-x-selection 'ignore)
 
 ;; gradle errors highlight
