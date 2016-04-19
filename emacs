@@ -43,9 +43,10 @@
 
 ;; load idea-like theme in graphics mode
 (if (display-graphic-p)
-    (load-theme 'idea-darkula t)
-    (set-default-font "Ubuntu Mono 12")
-)
+    (progn
+      (load-theme 'idea-darkula t)
+      (set-default-font "Ubuntu Mono 12") 
+    ))
 
 (require 'smart-tab)
 (global-smart-tab-mode 1)
