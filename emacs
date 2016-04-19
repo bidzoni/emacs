@@ -17,6 +17,7 @@
                       powerline-evil ;; powerline with vim bindings
                       idea-darkula-theme ;; color theme like intellij idea
                       linum-relative ;; relative line numbers 
+                      writeroom-mode ;; distraction free mode
                       ))
 
 (require 'cl)
@@ -43,7 +44,7 @@
 ;; load idea-like theme in graphics mode
 (if (display-graphic-p)
     (load-theme 'idea-darkula t)
-    (set-default-font "Ubuntu Mono-10")
+    (set-default-font "Ubuntu Mono 12")
 )
 
 (require 'smart-tab)
@@ -78,6 +79,7 @@
 (define-key evil-insert-state-map "\M-j" 'evil-next-visual-line)
 (define-key evil-insert-state-map "\M-l" 'evil-forward-char)
 (define-key evil-insert-state-map "\M-h" 'evil-backward-char)
+(define-key evil-insert-state-map "\M-h" 'evil-backward-char)
 
 ;; evil search persist highlight
 (require 'evil-search-highlight-persist)
@@ -87,13 +89,47 @@
 (require 'evil-surround)
 (global-evil-surround-mode 1)
 
+;; org-mode settings
 (require 'evil-org)
-(setq org-todo-keywords '((sequence "TODO" "IN_PROGRESS" "|" "DONE"))) ;; TODO workflow
+(setq org-todo-keywords ;; TODO workflow
+      '((sequence "TODO" "IN_PROGRESS" "|" "DONE")
+        (sequence "ASSIGNED" "|" "DONE")
+        (sequence "|" "HOLD")
+        )) 
 (setq org-todo-keyword-faces
       '(("TODO" . org-warning)
         ("IN_PROGRESS" . "yellow")
+        ("ASSIGNED" . "yellow")
+        ("HOLD" . "red")
         ("DONE" . "green")))
 (setq org-log-done 'time) ;; time on close todo entry
+
+;; org-mode and redmine integration
+(evil-leader/set-key-for-mode 'org-mode
+  "i" 'org-insert-heading-after-current ;; insert heading after current
+)
+(define-key evil-org-mode-map "gt" 'org-tracker-goto) ;; open issue in redmine if possible
+(define-key evil-org-mode-map "gc" 'org-tracker-create) ;; open issue in redmine if possible
+
+(setq redmine-url "http://trackerdev.openhd.ru") ;; redmine url
+
+(defun redmine-open-issue (id) ;; open issue function
+  (browse-url (concat redmine-url "/issues/" id)))
+
+(defun redmine-create-issue (subject description) ;; create issue function
+  (browse-url (url-encode-url(concat redmine-url "/issues/new?issue[subject]=" subject "&issue[description]=" description))))
+
+(defun org-tracker-goto (&optional pom) ;; open current issue function
+  (interactive)
+  (org-with-point-at pom
+    (redmine-open-issue  (org-entry-get nil "issue"))))
+
+(defun org-tracker-create (&optional pom) ;; create issue function
+  (interactive)
+  (redmine-create-issue
+   (org-get-heading 1 1)
+   (org-get-entry)
+   ))
 
 ;; smartline (powerline analog)
 (require 'powerline)
@@ -166,9 +202,10 @@
 
 ;; line numbers
 (require 'linum-relative)
-(setq linum-format "%4d \u2502 ")
-(setq linum-relative-format "%4s \u2502 ")
-(linum-relative-global-mode)
+(setq linum-format "%5d \u2502 ") ;; line numbers 
+(setq linum-relative-format "%5s \u2502 ") ;; line numbers
+(linum-relative-global-mode) ;; relative line numbers
+(column-number-mode 1) ;; line numbers
 ;; (global-linum-mode)
 
 (define-key global-map (kbd "RET") 'newline-and-indent) ;; autoindent
@@ -177,10 +214,11 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1)) ;; disable tool-bar
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1)) ;; disable menu-bar
 (show-paren-mode 1) ;; pair bracers
-(column-number-mode 1) ;; line numbers
+
 (global-hl-line-mode 1) ;; current line
-(visual-line-mode 1) ;; wrap long lines
-(set-face-background hl-line-face "light gray") ;; current line color
+(set-face-background 'hl-line "#3e4446") ;; current line color
+(set-face-foreground 'highlight nil) ;; syntax highlight in current line
+(global-visual-line-mode 1) ;; wrap long lines
 
 ;; remember cursor position
 (if (version< emacs-version "25.0")
@@ -191,6 +229,8 @@
 
 (setq inhibit-startup-message t) ;; disable start message
 (setq frame-title-format "emacs") ;; set title format
+
+;; set global clipboard
 (setq x-select-enable-clipboard t)
 (setq interprogram-paste-function 'x-cut-buffer-or-selection-value)
 (fset 'evil-visual-update-x-selection 'ignore)
@@ -218,3 +258,4 @@
 (setq wl-from "Anton Graschenkov <agraschenkov@wildred.ru>"
       wl-fcc-force-as-read    t
       wl-default-spec "%")
+
