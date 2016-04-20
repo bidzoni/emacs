@@ -17,7 +17,8 @@
                       powerline-evil ;; powerline with vim bindings
                       idea-darkula-theme ;; color theme like intellij idea
                       linum-relative ;; relative line numbers 
-                      writeroom-mode ;; distraction free mode
+                      yasnippet ;; snippets for emacs
+                      ggtags ;; work with tags in large projects
                       ))
 
 (require 'cl)
@@ -48,9 +49,6 @@
       (set-default-font "Ubuntu Mono 12") 
     ))
 
-(require 'smart-tab)
-(global-smart-tab-mode 1)
-
 ;; company quickhelp
 (company-quickhelp-mode 1)
 
@@ -69,7 +67,6 @@
 ;; evil mode
 (require 'evil)
 (evil-mode 1)
-;; (define-key evil-normal-state-map "\S-b" 'ido-switch-buffer)
 (define-key evil-normal-state-map "\C-n" nil)
 (define-key evil-normal-state-map "\C-p" nil)
 (define-key evil-normal-state-map "\C-u" 'evil-scroll-up)
@@ -78,9 +75,8 @@
 ;; insert mode motoin
 (define-key evil-insert-state-map "\M-k" 'evil-previous-visual-line)
 (define-key evil-insert-state-map "\M-j" 'evil-next-visual-line)
-(define-key evil-insert-state-map "\M-l" 'evil-forward-char)
-(define-key evil-insert-state-map "\M-h" 'evil-backward-char)
-(define-key evil-insert-state-map "\M-h" 'evil-backward-char)
+(define-key evil-insert-state-map "\M-l" 'forward-char)
+(define-key evil-insert-state-map "\M-h" 'backward-char)
 
 ;; evil search persist highlight
 (require 'evil-search-highlight-persist)
@@ -109,8 +105,10 @@
 (evil-leader/set-key-for-mode 'org-mode
   "i" 'org-insert-heading-after-current ;; insert heading after current
 )
-(define-key evil-org-mode-map "gt" 'org-tracker-goto) ;; open issue in redmine if possible
-(define-key evil-org-mode-map "gc" 'org-tracker-create) ;; open issue in redmine if possible
+(evil-define-key 'normal evil-org-mode-map
+  "gt" 'org-tracker-goto ;; open issue in redmine if possible
+  "gc" 'org-tracker-create ;; create issue in redmine 
+)
 
 (setq redmine-url "http://trackerdev.openhd.ru") ;; redmine url
 
@@ -184,22 +182,37 @@
 (setq company-dabbrev-downcase 'nil)
 (add-hook 'after-init-hook 'global-company-mode) ;; company always enabled
 (setq-default company-minimum-prefix-length 2   ;; minimum prefix character number for auto complete.
-              company-idle-delay 0    ;; show tooltip without delay
+              company-idle-delay 2    ;; show tooltip without delay
               company-echo-delay 0    ;; show inline tooltip without delay
               company-show-numbers nil  ;; show numbers in autocomplete popup
               company-selection-wrap-around t ;; loop over candidates
               )
-(eval-after-load 'company  '(progn
-                              (define-key company-active-map (kbd "TAB") 'company-select-next) ;; choose candidate by tab
-                              (define-key company-active-map (kbd "M-j") 'company-select-next) ;; alt-j
-                              (define-key company-active-map (kbd "M-k") 'company-select-previous) ;; and alt-k
-                              (define-key company-active-map [tab] 'company-select-next)))
+(define-key company-active-map (kbd "TAB") 'company-select-next) ;; choose candidate by tab
+(define-key company-active-map [tab] 'company-select-next) ;; choose candidate by tab
+(define-key company-active-map (kbd "M-j") 'company-select-next) ;; alt-j
+(define-key company-active-map (kbd "M-k") 'company-select-previous) ;; and alt-k
+(define-key company-active-map (kbd "M-l") 'company-abort) ;; abort by M-l
 
 (add-to-list 'company-backends 'company-shell) ;; shell script completion
 (add-to-list 'company-backends 'company-capf) ;; org completion
 
+(define-key evil-insert-state-map (kbd "C-<SPC>") 'company-complete)
+(define-key evil-insert-state-map [tab] 'company-complete)
+
 ;;autopair
 (autopair-global-mode)
+
+;; yassnippet
+(require 'yasnippet)
+(yas-global-mode)
+(yas-reload-all)
+;; Completing point by some yasnippet key
+(define-key yas-minor-mode-map (kbd "C-j") 'company-yasnippet)
+
+;; gtags
+(require 'ggtags)
+
+;; COMMON SETTINGS
 
 ;; line numbers
 (require 'linum-relative)
