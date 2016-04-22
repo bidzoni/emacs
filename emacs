@@ -19,6 +19,7 @@
                       linum-relative ;; relative line numbers 
                       yasnippet ;; snippets for emacs
                       ggtags ;; work with tags in large projects
+                      evil-escape ;; excape from everywhere by pressing jk
                       ))
 
 (require 'cl)
@@ -61,6 +62,7 @@
  "k" 'kill-buffer ;; kill buffer
  "m" 'idomenu ;; goto method
  "c" 'projectile-find-file ;; goto project class (file)
+ "r" 'mode-line-other-buffer ;; recent buffer
  "<SPC>" 'evil-scroll-down ;; scroll down one screen
 )
 
@@ -77,6 +79,7 @@
 (define-key evil-insert-state-map "\M-j" 'evil-next-visual-line)
 (define-key evil-insert-state-map "\M-l" 'forward-char)
 (define-key evil-insert-state-map "\M-h" 'backward-char)
+(define-key evil-insert-state-map "\M-o" 'mode-line-other-buffer)
 
 ;; evil search persist highlight
 (require 'evil-search-highlight-persist)
@@ -85,6 +88,10 @@
 ;; enable surround (try to push ysiW" to surround whole WORLD with ")
 (require 'evil-surround)
 (global-evil-surround-mode 1)
+
+(require 'evil-escape)
+(evil-escape-mode 1)
+(setq-default evil-escape-key-sequence "jk")
 
 ;; org-mode settings
 (require 'evil-org)
@@ -182,7 +189,7 @@
 (setq company-dabbrev-downcase 'nil)
 (add-hook 'after-init-hook 'global-company-mode) ;; company always enabled
 (setq-default company-minimum-prefix-length 2   ;; minimum prefix character number for auto complete.
-              company-idle-delay 2    ;; show tooltip without delay
+              company-idle-delay 0    ;; show tooltip without delay
               company-echo-delay 0    ;; show inline tooltip without delay
               company-show-numbers nil  ;; show numbers in autocomplete popup
               company-selection-wrap-around t ;; loop over candidates
@@ -211,6 +218,9 @@
 
 ;; gtags
 (require 'ggtags)
+
+;; tramp settings
+(eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
 
 ;; COMMON SETTINGS
 
@@ -252,6 +262,21 @@
 ;; gradle errors highlight
 (add-to-list 'compilation-error-regexp-alist
              '("^\[ERROR\] \(.*\):\[\([0-9]+\),\([0-9]+\)\]" 1 2 3))
+
+;; spelling
+;; список используемых нами словарей
+(setq ispell-local-dictionary-alist
+    '(("russian"
+       "[АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя]"
+       "[^АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя]"
+       "[-]"  nil ("-d" "ru_RU") nil utf-8)
+      ("english"
+       "[A-Za-z]" "[^A-Za-z]"
+       "[']"  nil ("-d" "en_US") nil iso-8859-1)))
+
+;; вместо aspell использовать hunspell
+(setq ispell-really-aspell nil
+      ispell-really-hunspell t)
 
 ;; email client wanderlust (disabled now)
 (setq elmo-imap4-default-server "mail.nic.ru"
