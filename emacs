@@ -4,7 +4,6 @@
                       evil    ;; vim bindings
                       evil-leader  ;; vim leader button
                       evil-org     ;; vim bindings for org mode
-                      evil-search-highlight-persist ;; vim search highlight
                       evil-surround ;; vim surround functionality
                       projectile ;; fuzzy find files
                       gradle-mode ;; build gradle project
@@ -80,10 +79,6 @@
 (define-key evil-insert-state-map "\M-l" 'forward-char)
 (define-key evil-insert-state-map "\M-h" 'backward-char)
 (define-key evil-insert-state-map "\M-o" 'mode-line-other-buffer)
-
-;; evil search persist highlight
-(require 'evil-search-highlight-persist)
-(global-evil-search-highlight-persist t)
 
 ;; enable surround (try to push ysiW" to surround whole WORLD with ")
 (require 'evil-surround)
@@ -218,6 +213,11 @@
 
 ;; gtags
 (require 'ggtags)
+(evil-leader/set-key
+ "gr" 'ggtags-find-reference ;; find symbol references
+ "gd" 'ggtags-find-definition ;; find symbol definition
+ "gt" 'ggtags-find-tag-dwim ;; find tag
+)
 
 ;; tramp settings
 (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
@@ -264,7 +264,6 @@
              '("^\[ERROR\] \(.*\):\[\([0-9]+\),\([0-9]+\)\]" 1 2 3))
 
 ;; spelling
-;; список используемых нами словарей
 (setq ispell-local-dictionary-alist
     '(("russian"
        "[АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЬЫЪЭЮЯабвгдеёжзийклмнопрстуфхцчшщьыъэюя]"
@@ -274,12 +273,18 @@
        "[A-Za-z]" "[^A-Za-z]"
        "[']"  nil ("-d" "en_US") nil iso-8859-1)))
 
-;; вместо aspell использовать hunspell
+;; aspell -> hunspell
 (setq ispell-really-aspell nil
       ispell-really-hunspell t)
 
+;; kill other buffers command
+(defun kill-other-buffers ()
+  "Kill all other buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
 ;; email client wanderlust (disabled now)
-(setq elmo-imap4-default-server "mail.nic.ru"
+(setq elmo-imap4-default-server "imap.yandex.ru"
       elmo-imap4-default-user "agraschenkov@wildred.ru"
       elmo-imap4-default-authenticate-type 'clear
       elmo-imap4-default-port '993
@@ -290,9 +295,9 @@
       wl-smtp-posting-port 465
       wl-smtp-authenticate-type "plain"
       wl-smtp-posting-user "agraschenkov@wildred.ru"
-      wl-smtp-posting-server "mail.nic.ru"
-      wl-local-domain "nic.ru"
-      wl-message-id-domain "mail.nic.ru")
+      wl-smtp-posting-server "smtp.yandex.ru"
+      wl-local-domain "yandex.ru"
+      wl-message-id-domain "smtp.yandex.ru")
 
 (setq wl-from "Anton Graschenkov <agraschenkov@wildred.ru>"
       wl-fcc-force-as-read    t
