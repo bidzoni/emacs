@@ -5,6 +5,8 @@
                       evil-leader  ;; vim leader button
                       evil-org     ;; vim bindings for org mode
                       evil-surround ;; vim surround functionality
+                      evil-magit ;; evil git
+                      evil-escape ;; excape from everywhere by pressing jk
                       projectile ;; fuzzy find files
                       gradle-mode ;; build gradle project
                       groovy-mode ;; groovy syntax
@@ -12,13 +14,14 @@
                       smex ;; ido-style M-x complete
                       idomenu  ;; find methods and variables in current buffer (Ctrl-P)
                       ido-vertical-mode ;; ido menu is vertical now
+                      flx-ido ;; ido fuzzy mutching
                       powerline ;; powerline mode
                       powerline-evil ;; powerline with vim bindings
                       idea-darkula-theme ;; color theme like intellij idea
                       linum-relative ;; relative line numbers 
                       yasnippet ;; snippets for emacs
                       ggtags ;; work with tags in large projects
-                      evil-escape ;; excape from everywhere by pressing jk
+                      magit ;; git for emacs
                       ))
 
 (require 'cl)
@@ -49,24 +52,18 @@
       (set-default-font "Ubuntu Mono 12") 
     ))
 
+;;
+(require 'logcat)
+
 ;; company quickhelp
 (company-quickhelp-mode 1)
 
 ;; enable evil leader button
 (global-evil-leader-mode)
-(evil-leader/set-leader "<SPC>")
-(evil-leader/set-key
- "f" 'find-file ;; find file
- "b" 'ido-switch-buffer ;; switch buffers with menu
- "k" 'kill-buffer ;; kill buffer
- "m" 'idomenu ;; goto method
- "c" 'projectile-find-file ;; goto project class (file)
- "r" 'mode-line-other-buffer ;; recent buffer
- "<SPC>" 'evil-scroll-down ;; scroll down one screen
-)
 
 ;; evil mode
 (require 'evil)
+(require 'evil-magit)
 (evil-mode 1)
 (define-key evil-normal-state-map "\C-n" nil)
 (define-key evil-normal-state-map "\C-p" nil)
@@ -79,6 +76,18 @@
 (define-key evil-insert-state-map "\M-l" 'forward-char)
 (define-key evil-insert-state-map "\M-h" 'backward-char)
 (define-key evil-insert-state-map "\M-o" 'mode-line-other-buffer)
+
+(evil-leader/set-leader "<SPC>")
+(evil-leader/set-key
+ "f" 'find-file ;; find file
+ "b" 'ido-switch-buffer ;; switch buffers with menu
+ "k" 'kill-buffer ;; kill buffer
+ "m" 'idomenu ;; goto method
+ "c" 'projectile-find-file ;; goto project class (file)
+ "r" 'mode-line-other-buffer ;; recent buffer
+ "<SPC>" 'evil-scroll-down ;; scroll down one screen
+)
+
 
 ;; enable surround (try to push ysiW" to surround whole WORLD with ")
 (require 'evil-surround)
@@ -155,6 +164,7 @@
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command) ;; old M-x.
 
 ;; ido - completion for everything
+(require 'flx-ido)
 (require 'ido-vertical-mode)
 ;; ido pretty menu
 (setq ido-use-faces t)
@@ -176,8 +186,10 @@
 ;; turn it on
 (ido-mode 1)
 (ido-vertical-mode 1)
+(ido-everywhere 1)
 (setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
+(flx-ido-mode 1)
+(setq ido-use-faces nil)
 
 ;; company-mode (autocomplete engine)
 (require 'company)
@@ -303,3 +315,15 @@
       wl-fcc-force-as-read    t
       wl-default-spec "%")
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ecb-options-version "2.40"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
