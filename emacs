@@ -22,6 +22,8 @@
                       yasnippet ;; snippets for emacs
                       ggtags ;; work with tags in large projects
                       magit ;; git for emacs
+                      flyspell-correct ;; correct word spelling with popup-menu
+                      flyspell-correct-popup ;; correct word spelling with popup-menu
                       ))
 
 (require 'cl)
@@ -86,6 +88,7 @@
  "c" 'projectile-find-file ;; goto project class (file)
  "r" 'mode-line-other-buffer ;; recent buffer
  "<SPC>" 'evil-scroll-down ;; scroll down one screen
+ "s" 'flyspell-correct-popup ;; correct word under cursor
 )
 
 
