@@ -22,8 +22,9 @@
                       yasnippet ;; snippets for emacs
                       ggtags ;; work with tags in large projects
                       magit ;; git for emacs
-                      flyspell-correct ;; correct word spelling with popup-menu
                       flyspell-correct-popup ;; correct word spelling with popup-menu
+                      json-mode ;; major mode for json editing
+                      expand-region ;; expand region (like in IDEA) 
                       ))
 
 (require 'cl)
@@ -57,6 +58,9 @@
 ;;
 (require 'logcat)
 
+(require 'expand-region)
+(global-set-key (kbd "M-w") 'er/expand-region)
+
 ;; company quickhelp
 (company-quickhelp-mode 1)
 
@@ -88,7 +92,6 @@
  "c" 'projectile-find-file ;; goto project class (file)
  "r" 'mode-line-other-buffer ;; recent buffer
  "<SPC>" 'evil-scroll-down ;; scroll down one screen
- "s" 'flyspell-correct-popup ;; correct word under cursor
 )
 
 
