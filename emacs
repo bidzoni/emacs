@@ -91,6 +91,7 @@
  "m" 'idomenu ;; goto method
  "c" 'projectile-find-file ;; goto project class (file)
  "r" 'mode-line-other-buffer ;; recent buffer
+ "g" 'magit-status ;; work with git
  "<SPC>" 'evil-scroll-down ;; scroll down one screen
 )
 
