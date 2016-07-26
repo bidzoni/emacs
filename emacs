@@ -157,6 +157,13 @@
 ;; neotree file browser
 (require 'neotree)
 (global-set-key [f3] 'neotree-toggle)
+(setq neo-smart-open t)
+(add-hook 'neotree-mode-hook ;; neotree and evil
+        (lambda ()
+            (define-key evil-normal-state-local-map (kbd "TAB") 'neotree-enter)
+            (define-key evil-normal-state-local-map (kbd "SPC") 'neotree-enter)
+            (define-key evil-normal-state-local-map (kbd "q") 'neotree-hide)
+            (define-key evil-normal-state-local-map (kbd "RET") 'neotree-enter)))
 
 ;;projectile file fuzzy search
 (projectile-global-mode)
