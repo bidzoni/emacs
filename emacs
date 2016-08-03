@@ -82,6 +82,8 @@
 (define-key evil-insert-state-map "\M-l" 'forward-char)
 (define-key evil-insert-state-map "\M-h" 'backward-char)
 (define-key evil-insert-state-map "\M-o" 'mode-line-other-buffer)
+(define-key evil-insert-state-map "\C-w" 'kill-backward-chars)
+(define-key evil-insert-state-map "\C-u" '(lambda () (interactive) (kill-line 0)))
 
 (evil-leader/set-leader "<SPC>")
 (evil-leader/set-key
