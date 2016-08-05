@@ -71,8 +71,15 @@
 (require 'evil)
 (require 'evil-magit)
 (evil-mode 1)
-(define-key evil-normal-state-map "\C-n" nil)
-(define-key evil-normal-state-map "\C-p" nil)
+;; esc quits
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+;; mapping 
 (define-key evil-normal-state-map "\C-u" 'evil-scroll-up)
 (define-key evil-normal-state-map "j" 'evil-next-visual-line)
 (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
@@ -170,7 +177,6 @@
 ;;projectile file fuzzy search
 (projectile-global-mode)
 (setq projectile-completion-system 'ido)
-(global-set-key (kbd "C-n") 'projectile-find-file) ;; popup projectile find file 
 
 ;;smex (ido-style M-x menu)
 (require 'smex)
@@ -198,7 +204,6 @@
   (define-key ido-completion-map (kbd "M-j") 'ido-next-match)
   (define-key ido-completion-map (kbd "M-k") 'ido-prev-match))
 (add-hook 'ido-setup-hook #'bind-ido-keys)
-(global-set-key (kbd "C-p") 'idomenu) ;; popup idomenu
 ;; turn it on
 (ido-mode 1)
 (ido-vertical-mode 1)
@@ -211,9 +216,9 @@
 (require 'company)
 (setq company-dabbrev-downcase 'nil)
 (add-hook 'after-init-hook 'global-company-mode) ;; company always enabled
-(setq-default company-minimum-prefix-length 2   ;; minimum prefix character number for auto complete.
-              company-idle-delay 0    ;; show tooltip without delay
-              company-echo-delay 0    ;; show inline tooltip without delay
+(setq-default company-minimum-prefix-length 4   ;; minimum prefix character number for auto complete.
+              company-idle-delay 1    ;; show tooltip without delay
+              company-echo-delay 1    ;; show inline tooltip without delay
               company-show-numbers nil  ;; show numbers in autocomplete popup
               company-selection-wrap-around t ;; loop over candidates
               )
