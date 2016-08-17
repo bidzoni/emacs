@@ -52,7 +52,7 @@
 (if (display-graphic-p)
     (progn
       (load-theme 'idea-darkula t)
-      (set-default-font "Ubuntu Mono 12") 
+      (set-default-font "Droid Sans Mono for Powerline 10") 
     ))
 
 ;;
@@ -99,6 +99,7 @@
  "k" 'kill-buffer ;; kill buffer
  "m" 'idomenu ;; goto method
  "c" 'projectile-find-file ;; goto project class (file)
+ "p" 'projectile-commander;; goto project class (file)
  "r" 'mode-line-other-buffer ;; recent buffer
  "`" 'magit-status ;; recent buffer
  "<SPC>" 'evil-scroll-down ;; scroll down one screen
@@ -177,6 +178,7 @@
 ;;projectile file fuzzy search
 (projectile-global-mode)
 (setq projectile-completion-system 'ido)
+(global-set-key (kbd "<f9>") 'projectile-compile-project)
 
 ;;smex (ido-style M-x menu)
 (require 'smex)
