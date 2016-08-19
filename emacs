@@ -22,7 +22,7 @@
                       yasnippet ;; snippets for emacs
                       ggtags ;; work with tags in large projects
                       magit ;; git for emacs
-                      flyspell-correct-popup ;; correct word spelling with popup-menu
+                      flyspell-popup ;; correct word spelling with popup-menu
                       json-mode ;; major mode for json editing
                       expand-region ;; expand region (like in IDEA) 
                       ))
@@ -88,7 +88,7 @@
 (define-key evil-insert-state-map "\M-j" 'evil-next-visual-line)
 (define-key evil-insert-state-map "\M-l" 'forward-char)
 (define-key evil-insert-state-map "\M-h" 'backward-char)
-(define-key evil-insert-state-map "\M-o" 'mode-line-other-buffer)
+(define-key evil-insert-state-map "\M-o" 'scroll-other-window-down)
 (define-key evil-insert-state-map "\C-w" 'kill-backward-chars)
 (define-key evil-insert-state-map "\C-u" '(lambda () (interactive) (kill-line 0)))
 
@@ -350,3 +350,21 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; fly spell cycle through languages
+(let ((langs '("english" "russian")))
+  (setq lang-ring (make-ring (length langs)))
+  (dolist (elem langs) (ring-insert lang-ring elem)))
+(defun cycle-ispell-languages ()
+  (interactive)
+  (let ((lang (ring-ref lang-ring -1)))
+    (ring-insert lang-ring lang)
+    (ispell-change-dictionary lang)))
+(global-set-key [f2] 'cycle-ispell-languages)
+(define-key evil-normal-state-map "]s" 'flyspell-goto-next-error)
+(define-key evil-normal-state-map "z=" 'flyspell-popup-correct)
+(define-key evil-normal-state-map (kbd "C-;") 'flyspell-popup-correct)
+
+;; sesstion manipulation
+(global-set-key [f5] 'desktop-save)
+(global-set-key [f6] 'desktop-read)
