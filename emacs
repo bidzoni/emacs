@@ -1,5 +1,6 @@
 (defvar my-packages '(company ;; autocomplete
                       company-quickhelp ;; methods and variables info in autocomplete
+                      company-web ;; web auto complete
                       neotree ;; file tree by F3
                       evil    ;; vim bindings
                       evil-leader  ;; vim leader button
@@ -25,6 +26,8 @@
                       flyspell-popup ;; correct word spelling with popup-menu
                       json-mode ;; major mode for json editing
                       expand-region ;; expand region (like in IDEA) 
+                      web-mode ;; major mode for web development
+                      js3-mode ;; java script mode
                       ))
 
 (require 'cl)
@@ -120,12 +123,14 @@
       '((sequence "TODO" "IN_PROGRESS" "|" "DONE")
         (sequence "ASSIGNED" "|" "DONE")
         (sequence "|" "HOLD")
+        (sequence "|" "FAILED")
         )) 
 (setq org-todo-keyword-faces
       '(("TODO" . org-warning)
         ("IN_PROGRESS" . "yellow")
         ("ASSIGNED" . "yellow")
         ("HOLD" . "red")
+        ("FAILED" . "red")
         ("DONE" . "green")))
 (setq org-log-done 'time) ;; time on close todo entry
 
@@ -216,6 +221,7 @@
 
 ;; company-mode (autocomplete engine)
 (require 'company)
+(require 'company-web-html)
 (setq company-dabbrev-downcase 'nil)
 (add-hook 'after-init-hook 'global-company-mode) ;; company always enabled
 (setq-default company-minimum-prefix-length 4   ;; minimum prefix character number for auto complete.
@@ -256,6 +262,19 @@
 
 ;; tramp settings
 (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
+
+
+;; WEB development settings
+
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(setq web-mode-engines-alist
+      '(("thymeleaf" . "\\.html\\'"))
+)
+(setq web-mode-enable-auto-closing t)
+(setq web-mode-enable-current-element-highlight t)
+(setq web-mode-enable-current-column-highlight t)
+
 
 ;; COMMON SETTINGS
 
