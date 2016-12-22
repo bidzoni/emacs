@@ -8,6 +8,7 @@
                       evil-surround ;; vim surround functionality
                       evil-magit ;; evil git
                       evil-escape ;; excape from everywhere by pressing jk
+                      evil-numbers ;; incremetn/decrement numbers in vim style
                       projectile ;; fuzzy find files
                       gradle-mode ;; build gradle project
                       groovy-mode ;; groovy syntax
@@ -86,6 +87,8 @@
 (define-key evil-normal-state-map "\C-u" 'evil-scroll-up)
 (define-key evil-normal-state-map "j" 'evil-next-visual-line)
 (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
+(define-key evil-normal-state-map "\C-a" 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map "\C-x" 'evil-numbers/dec-at-pt)
 ;; insert mode motoin
 (define-key evil-insert-state-map "\M-k" 'evil-previous-visual-line)
 (define-key evil-insert-state-map "\M-j" 'evil-next-visual-line)
@@ -274,7 +277,20 @@
 (setq web-mode-enable-auto-closing t)
 (setq web-mode-enable-current-element-highlight t)
 (setq web-mode-enable-current-column-highlight t)
-
+;; evil key bindings
+(evil-define-key 'normal web-mode-map
+  "gtn" 'web-mode-tag-next
+  "gtp" 'web-mode-tag-previous
+  "gtb" 'web-mode-tag-beginning
+  "gte" 'web-mode-tag-end
+  "gtm" 'web-mode-tag-match
+  "gts" 'web-mode-tag-select
+)
+(evil-leader/set-key-for-mode 'web-mode
+  "ew" 'web-mode-element-wrap
+  "ee" 'web-mode-element-close
+  "ec" 'web-mode-element-clone
+)
 
 ;; COMMON SETTINGS
 
