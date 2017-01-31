@@ -9,6 +9,7 @@
                       evil-magit ;; evil git
                       evil-escape ;; excape from everywhere by pressing jk
                       evil-numbers ;; incremetn/decrement numbers in vim style
+                      evil-tabs ;; tabs for evil mode
                       projectile ;; fuzzy find files
                       gradle-mode ;; build gradle project
                       groovy-mode ;; groovy syntax
@@ -29,6 +30,9 @@
                       expand-region ;; expand region (like in IDEA) 
                       web-mode ;; major mode for web development
                       js3-mode ;; java script mode
+                      yaml-mode ;; yml editing mode
+                      ag ;; grep on steroids
+                      evil-nerd-commenter ;; commenter plugin
                       ))
 
 (require 'cl)
@@ -36,7 +40,7 @@
 
 ;;package repositories
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+             '("melpa" . "https://melpa.org/packages/") t)
 
 ;;local libs and themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -75,6 +79,7 @@
 (require 'evil)
 (require 'evil-magit)
 (evil-mode 1)
+(add-to-list 'evil-emacs-state-modes 'nav-mode)
 ;; esc quits
 (define-key evil-normal-state-map [escape] 'keyboard-quit)
 (define-key evil-visual-state-map [escape] 'keyboard-quit)
@@ -87,8 +92,10 @@
 (define-key evil-normal-state-map "\C-u" 'evil-scroll-up)
 (define-key evil-normal-state-map "j" 'evil-next-visual-line)
 (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
-(define-key evil-normal-state-map "\C-a" 'evil-numbers/inc-at-pt)
-(define-key evil-normal-state-map "\C-x" 'evil-numbers/dec-at-pt)
+(define-key evil-normal-state-map (kbd "C-c a") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-c C-a") 'evil-numbers/inc-at-pt)
+(define-key evil-normal-state-map (kbd "C-c x") 'evil-numbers/dec-at-pt)
+(define-key evil-normal-state-map (kbd "C-c C-x") 'evil-numbers/dec-at-pt)
 ;; insert mode motoin
 (define-key evil-insert-state-map "\M-k" 'evil-previous-visual-line)
 (define-key evil-insert-state-map "\M-j" 'evil-next-visual-line)
@@ -108,9 +115,10 @@
  "p" 'projectile-commander;; goto project class (file)
  "r" 'mode-line-other-buffer ;; recent buffer
  "`" 'magit-status ;; recent buffer
+ "a" 'evil-numbers/inc-at-pt ;; increase number
+ "x" 'evil-numbers/dec-at-pt ;; decrease number
  "<SPC>" 'evil-scroll-down ;; scroll down one screen
 )
-
 
 ;; enable surround (try to push ysiW" to surround whole WORLD with ")
 (require 'evil-surround)
@@ -119,6 +127,9 @@
 (require 'evil-escape)
 (evil-escape-mode 1)
 (setq-default evil-escape-key-sequence "jk")
+
+;; evil tabs
+(global-evil-tabs-mode t)
 
 ;; org-mode settings
 (require 'evil-org)
@@ -373,6 +384,39 @@
       wl-fcc-force-as-read    t
       wl-default-spec "%")
 
+(setq wl-summary-width 150)
+
+;; ignore  all fields
+(setq wl-message-ignored-field-list '("^.*:"))
+;; ..but these five
+(setq wl-message-visible-field-list
+'("^To:"
+  "^Cc:"
+  "^From:"
+  "^Subject:"
+  "^Date:"))
+
+;; evil key bindings
+;; (add-to-list 'evil-emacs-state-modes 'mime-view-mode)
+(evil-define-key 'normal wl-summary-mode-map
+  (kbd "o") 'wl-summary-toggle-disp-msg
+  (kbd "f") 'wl-summary-pick
+  (kbd "r") 'wl-summary-reply
+  (kbd "R") 'wl-summary-reply-with-citation
+  (kbd "d") 'wl-summary-dispose
+  (kbd "x") 'wl-summary-exec
+  (kbd "u") 'wl-folder-next-unread
+  (kbd "RET") 'wl-summary-enter-handler
+  (kbd "SPACE") 'wl-summary-read
+  (kbd "g w") 'wl-summary-write
+  (kbd "g a") 'wl-summary-save
+  (kbd "g r") 'wl-summary-sync-update
+)
+
+(evil-define-key 'normal mime-view-mode-map
+  (kbd "q") 'mime-preview-quit
+)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -403,3 +447,6 @@
 ;; sesstion manipulation
 (global-set-key [f5] 'desktop-save)
 (global-set-key [f6] 'desktop-read)
+
+(load "server")
+(unless (server-running-p) (server-start))
