@@ -9,7 +9,6 @@
                       evil-magit ;; evil git
                       evil-escape ;; excape from everywhere by pressing jk
                       evil-numbers ;; incremetn/decrement numbers in vim style
-                      evil-tabs ;; tabs for evil mode
                       projectile ;; fuzzy find files
                       gradle-mode ;; build gradle project
                       groovy-mode ;; groovy syntax
@@ -127,9 +126,6 @@
 (require 'evil-escape)
 (evil-escape-mode 1)
 (setq-default evil-escape-key-sequence "jk")
-
-;; evil tabs
-(global-evil-tabs-mode t)
 
 ;; org-mode settings
 (require 'evil-org)
