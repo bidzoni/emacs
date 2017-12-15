@@ -1,6 +1,7 @@
 (defvar my-packages '(company ;; autocomplete
                       company-quickhelp ;; methods and variables info in autocomplete
                       company-web ;; web auto complete
+                      company-jedi ;; company for jedi
                       neotree ;; file tree by F3
                       evil    ;; vim bindings
                       evil-leader  ;; vim leader button
@@ -232,6 +233,7 @@
 ;; company-mode (autocomplete engine)
 (require 'company)
 (require 'company-web-html)
+(require 'company-jedi)
 (setq company-dabbrev-downcase 'nil)
 (add-hook 'after-init-hook 'global-company-mode) ;; company always enabled
 (setq-default company-minimum-prefix-length 4   ;; minimum prefix character number for auto complete.
@@ -249,8 +251,13 @@
 (add-to-list 'company-backends 'company-shell) ;; shell script completion
 (add-to-list 'company-backends 'company-capf) ;; org completion
 
-(define-key evil-insert-state-map (kbd "C-<SPC>") 'company-complete)
+(define-key evil-insert-state-map (kbd "C-<SPC>") 'toggle-input-method)
 (define-key evil-insert-state-map [tab] 'company-complete)
+
+;; jedi for python mode
+(defun my/python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi))
+(add-hook 'python-mode-hook 'my/python-mode-hook)
 
 ;;autopair
 (autopair-global-mode)
