@@ -10,6 +10,7 @@
                       evil-magit ;; evil git
                       evil-escape ;; excape from everywhere by pressing jk
                       evil-numbers ;; incremetn/decrement numbers in vim style
+                      ace-jump-mode ;; easy motion for emacs
                       projectile ;; fuzzy find files
                       gradle-mode ;; build gradle project
                       groovy-mode ;; groovy syntax
@@ -102,7 +103,7 @@
 (define-key evil-insert-state-map "\M-l" 'forward-char)
 (define-key evil-insert-state-map "\M-h" 'backward-char)
 (define-key evil-insert-state-map "\M-o" 'scroll-other-window-down)
-(define-key evil-insert-state-map "\C-w" 'kill-backward-chars)
+(define-key evil-insert-state-map "\C-w" 'backward-kill-word)
 (define-key evil-insert-state-map "\C-u" '(lambda () (interactive) (kill-line 0)))
 
 (evil-leader/set-leader "<SPC>")
@@ -117,7 +118,9 @@
  "`" 'magit-status ;; recent buffer
  "a" 'evil-numbers/inc-at-pt ;; increase number
  "x" 'evil-numbers/dec-at-pt ;; decrease number
- "<SPC>" 'evil-scroll-down ;; scroll down one screen
+ "SPC f" 'ace-jump-mode ;; easy motion find char
+ "SPC f" 'ace-jump-line-mode ;; easy motion find line
+ "SPC f" 'ace-jump-word-mode ;; easy motion find word
 )
 
 ;; enable surround (try to push ysiW" to surround whole WORLD with ")
@@ -143,7 +146,16 @@
         ("HOLD" . "red")
         ("FAILED" . "red")
         ("DONE" . "green")))
-(setq org-log-done 'time) ;; time on close todo entry
+;; (setq org-log-done 'time) ;; time on close todo entry
+
+;; archive all done tasks
+(defun org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (outline-previous-heading)))
+      "/DONE" 'tree))
 
 ;; org-mode and redmine integration
 (evil-leader/set-key-for-mode 'org-mode
@@ -173,6 +185,7 @@
    (org-get-heading 1 1)
    (org-get-entry)
    ))
+
 
 ;; smartline (powerline analog)
 (require 'powerline)
@@ -236,23 +249,24 @@
 (require 'company-jedi)
 (setq company-dabbrev-downcase 'nil)
 (add-hook 'after-init-hook 'global-company-mode) ;; company always enabled
-(setq-default company-minimum-prefix-length 4   ;; minimum prefix character number for auto complete.
-              company-idle-delay 1    ;; show tooltip without delay
-              company-echo-delay 1    ;; show inline tooltip without delay
+(setq-default company-minimum-prefix-length 3   ;; minimum prefix character number for auto complete.
+              company-idle-delay 0    ;; show tooltip without delay
+              company-echo-delay 0    ;; show inline tooltip without delay
               company-show-numbers nil  ;; show numbers in autocomplete popup
               company-selection-wrap-around t ;; loop over candidates
               )
 (define-key company-active-map (kbd "TAB") 'company-select-next) ;; choose candidate by tab
-(define-key company-active-map [tab] 'company-select-next) ;; choose candidate by tab
 (define-key company-active-map (kbd "M-j") 'company-select-next) ;; alt-j
 (define-key company-active-map (kbd "M-k") 'company-select-previous) ;; and alt-k
+(define-key company-active-map (kbd "M-l") 'company-abort) ;; abort by M-l
 (define-key company-active-map (kbd "M-l") 'company-abort) ;; abort by M-l
 
 (add-to-list 'company-backends 'company-shell) ;; shell script completion
 (add-to-list 'company-backends 'company-capf) ;; org completion
 
-(define-key evil-insert-state-map (kbd "C-<SPC>") 'toggle-input-method)
-(define-key evil-insert-state-map [tab] 'company-complete)
+(define-key evil-insert-state-map (kbd "C-6") 'toggle-input-method)
+;; (define-key evil-insert-state-map (kbd "C-<SPC>") 'toggle-input-method)
+;; (define-key evil-insert-state-map [tab] 'company-complete)
 
 ;; jedi for python mode
 (defun my/python-mode-hook ()
@@ -367,55 +381,6 @@
   (interactive)
   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 
-;; email client wanderlust (disabled now)
-(setq elmo-imap4-default-server "imap.yandex.ru"
-      elmo-imap4-default-user "agraschenkov@wildred.ru"
-      elmo-imap4-default-authenticate-type 'clear
-      elmo-imap4-default-port '993
-      elmo-imap4-default-stream-type 'ssl
-      elmo-imap4-use-modified-utf7 t)
-
-(setq wl-smtp-connection-type 'ssl
-      wl-smtp-posting-port 465
-      wl-smtp-authenticate-type "plain"
-      wl-smtp-posting-user "agraschenkov@wildred.ru"
-      wl-smtp-posting-server "smtp.yandex.ru"
-      wl-local-domain "yandex.ru"
-      wl-message-id-domain "smtp.yandex.ru")
-
-(setq wl-from "Anton Graschenkov <agraschenkov@wildred.ru>"
-      wl-fcc-force-as-read    t
-      wl-default-spec "%")
-
-(setq wl-summary-width 150)
-
-;; ignore  all fields
-(setq wl-message-ignored-field-list '("^.*:"))
-;; ..but these five
-(setq wl-message-visible-field-list
-'("^To:"
-  "^Cc:"
-  "^From:"
-  "^Subject:"
-  "^Date:"))
-
-;; evil key bindings
-;; (add-to-list 'evil-emacs-state-modes 'mime-view-mode)
-(evil-define-key 'normal wl-summary-mode-map
-  (kbd "o") 'wl-summary-toggle-disp-msg
-  (kbd "f") 'wl-summary-pick
-  (kbd "r") 'wl-summary-reply
-  (kbd "R") 'wl-summary-reply-with-citation
-  (kbd "d") 'wl-summary-dispose
-  (kbd "x") 'wl-summary-exec
-  (kbd "u") 'wl-folder-next-unread
-  (kbd "RET") 'wl-summary-enter-handler
-  (kbd "SPACE") 'wl-summary-read
-  (kbd "g w") 'wl-summary-write
-  (kbd "g a") 'wl-summary-save
-  (kbd "g r") 'wl-summary-sync-update
-)
-
 (evil-define-key 'normal mime-view-mode-map
   (kbd "q") 'mime-preview-quit
 )
@@ -425,7 +390,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ecb-options-version "2.40"))
+ '(ecb-options-version "2.40")
+ '(jdee-jdk (quote ("1.8")))
+ '(jdee-jdk-registry (quote (("1.8" . "/opt/java-8-oracle/")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -447,7 +414,7 @@
 (define-key evil-normal-state-map "z=" 'flyspell-popup-correct)
 (define-key evil-normal-state-map (kbd "C-;") 'flyspell-popup-correct)
 
-;; sesstion manipulation
+;; session manipulation
 (global-set-key [f5] 'desktop-save)
 (global-set-key [f6] 'desktop-read)
 
