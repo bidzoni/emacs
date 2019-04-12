@@ -392,7 +392,10 @@
  ;; If there is more than one, they won't work right.
  '(ecb-options-version "2.40")
  '(jdee-jdk (quote ("1.8")))
- '(jdee-jdk-registry (quote (("1.8" . "/opt/java-8-oracle/")))))
+ '(jdee-jdk-registry (quote (("1.8" . "/opt/java-8-oracle/"))))
+ '(package-selected-packages
+   (quote
+    (notmuch yasnippet yaml-mode writeroom-mode web-mode wanderlust vimrc-mode smex smart-mode-line-powerline-theme seq seoul256-theme restclient relative-line-numbers projectile powerline-evil org-bullets neotree monokai-theme markdown-mode+ log4j-mode linum-relative let-alist jtags json-mode js3-mode jdee idomenu ido-vertical-mode idea-darkula-theme helm groovy-mode gradle-mode ggtags fringe-helper flyspell-popup flyspell-correct-popup flx-ido expand-region evil-surround evil-space evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-magit evil-escape evil-easymotion elscreen ecb company-web company-quickhelp company-jedi colemak-evil caroline-theme badwolf-theme autopair auto-complete android-mode airline-themes ag ace-jump-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
