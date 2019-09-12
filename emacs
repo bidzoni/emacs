@@ -61,7 +61,7 @@
 (if (display-graphic-p)
     (progn
       (load-theme 'idea-darkula t)
-      (set-default-font "Droid Sans Mono for Powerline 10") 
+      ; (set-default-font "Droid Sans Mono for Powerline 10") 
     ))
 
 ;;
@@ -119,8 +119,9 @@
  "a" 'evil-numbers/inc-at-pt ;; increase number
  "x" 'evil-numbers/dec-at-pt ;; decrease number
  "SPC f" 'ace-jump-mode ;; easy motion find char
- "SPC f" 'ace-jump-line-mode ;; easy motion find line
- "SPC f" 'ace-jump-word-mode ;; easy motion find word
+ "SPC j" 'ace-jump-line-mode ;; easy motion find line
+ "SPC k" 'ace-jump-line-mode ;; easy motion find line
+ "SPC w" 'ace-jump-word-mode ;; easy motion find word
 )
 
 ;; enable surround (try to push ysiW" to surround whole WORLD with ")
