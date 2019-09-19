@@ -38,8 +38,6 @@
 
 (require 'cl)
 (require 'package)
-
-;;package repositories
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 
@@ -61,7 +59,7 @@
 (if (display-graphic-p)
     (progn
       (load-theme 'idea-darkula t)
-      ; (set-default-font "Droid Sans Mono for Powerline 10") 
+      ; (set-default-font "Droid Sans Mono for Powerline 10")
     ))
 
 ;;
@@ -103,7 +101,13 @@
 (define-key evil-insert-state-map "\M-l" 'forward-char)
 (define-key evil-insert-state-map "\M-h" 'backward-char)
 (define-key evil-insert-state-map "\M-o" 'scroll-other-window-down)
+;; rsi
 (define-key evil-insert-state-map "\C-w" 'backward-kill-word)
+(define-key evil-insert-state-map "\C-a" 'beginning-of-line)
+(define-key evil-insert-state-map "\C-f" 'forward-char)
+(define-key evil-insert-state-map "\C-e" 'end-of-line)
+(define-key evil-insert-state-map "\C-d" 'delete-forward-char)
+(define-key evil-insert-state-map "\C-t" 'transpose-chars)
 (define-key evil-insert-state-map "\C-u" '(lambda () (interactive) (kill-line 0)))
 
 (evil-leader/set-leader "<SPC>")
@@ -134,6 +138,10 @@
 
 ;; org-mode settings
 (require 'evil-org)
+(add-hook 'org-mode-hook 'evil-org-mode)
+(evil-org-set-key-theme '(navigation insert textobjects additional calendar))
+(require 'evil-org-agenda)
+(evil-org-agenda-set-keys)
 (setq org-todo-keywords ;; TODO workflow
       '((sequence "TODO" "IN_PROGRESS" "|" "DONE")
         (sequence "ASSIGNED" "|" "DONE")
@@ -234,7 +242,9 @@
 (defun bind-ido-keys ()
   "Keybindings for ido mode."
   (define-key ido-completion-map (kbd "M-j") 'ido-next-match)
-  (define-key ido-completion-map (kbd "M-k") 'ido-prev-match))
+  (define-key ido-completion-map (kbd "M-k") 'ido-prev-match)
+  (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
+  (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))
 (add-hook 'ido-setup-hook #'bind-ido-keys)
 ;; turn it on
 (ido-mode 1)
