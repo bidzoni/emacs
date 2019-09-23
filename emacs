@@ -5,11 +5,11 @@
                       neotree ;; file tree by F3
                       evil    ;; vim bindings
                       evil-leader  ;; vim leader button
-                      evil-org     ;; vim bindings for org mode
                       evil-surround ;; vim surround functionality
                       evil-magit ;; evil git
                       evil-escape ;; excape from everywhere by pressing jk
                       evil-numbers ;; incremetn/decrement numbers in vim style
+                      evil-org ;; evil org mode
                       ace-jump-mode ;; easy motion for emacs
                       projectile ;; fuzzy find files
                       gradle-mode ;; build gradle project
@@ -57,10 +57,8 @@
 
 ;; load idea-like theme in graphics mode
 (if (display-graphic-p)
-    (progn
-      (load-theme 'idea-darkula t)
-      ; (set-default-font "Droid Sans Mono for Powerline 10")
-    ))
+    (load-theme 'idea-darkula t)
+    (load-theme 'zenburn))
 
 ;;
 (require 'logcat)
@@ -136,12 +134,14 @@
 (evil-escape-mode 1)
 (setq-default evil-escape-key-sequence "jk")
 
-;; org-mode settings
+;; org mode settins
+(setq org-startup-indented t) ;; indent instead of stars
 (require 'evil-org)
 (add-hook 'org-mode-hook 'evil-org-mode)
 (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
 (require 'evil-org-agenda)
 (evil-org-agenda-set-keys)
+
 (setq org-todo-keywords ;; TODO workflow
       '((sequence "TODO" "IN_PROGRESS" "|" "DONE")
         (sequence "ASSIGNED" "|" "DONE")
@@ -155,7 +155,6 @@
         ("HOLD" . "red")
         ("FAILED" . "red")
         ("DONE" . "green")))
-;; (setq org-log-done 'time) ;; time on close todo entry
 
 ;; archive all done tasks
 (defun org-archive-done-tasks ()
@@ -168,11 +167,26 @@
 
 ;; org-mode and redmine integration
 (evil-leader/set-key-for-mode 'org-mode
-  "i" 'org-insert-heading-after-current ;; insert heading after current
+  "O" 'org-insert-heading-respect-content ;; insert new heading
+  "o" 'org-insert-heading-after-current ;; insert new heading
+  "i" 'org-insert-heading-after-current ;; insert new heading
+  "t" 'org-todo ;; toggle todo
+  "d" 'org-deadline ;; insert deadline
+  "a" 'org-agenda ;; open agenda
+  "/" 'org-sparse-tree ;; sparse tree
 )
-(evil-define-key 'normal evil-org-mode-map
+(evil-define-key 'normal org-mode-map
   "gt" 'org-tracker-goto ;; open issue in redmine if possible
   "gc" 'org-tracker-create ;; create issue in redmine 
+  "t" 'org-todo ;; toggle todo
+  "M-j" 'org-move-item-down
+  "M-J" 'org-move-subtree-down
+  "M-k" 'org-move-item-up
+  "M-K" 'org-move-subtree-up
+  "TAB" 'org-cycle ;; cycle visibility
+)
+(evil-define-key 'insert org-mode-map
+  "M-ENTER"  'org-insert-heading-after-current;; insert new heading
 )
 
 (setq redmine-url "http://trackerdev.openhd.ru") ;; redmine url
@@ -401,12 +415,46 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(custom-safe-themes
+   (quote
+    ("a7051d761a713aaf5b893c90eaba27463c791cd75d7257d3a8e66b0c8c346e77" "420689cc31d01fe04b8e3adef87b8838ff52faa169e69ca4e863143ae9f3a9f9" default)))
  '(ecb-options-version "2.40")
+ '(fci-rule-color "#383838")
  '(jdee-jdk (quote ("1.8")))
  '(jdee-jdk-registry (quote (("1.8" . "/opt/java-8-oracle/"))))
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (notmuch yasnippet yaml-mode writeroom-mode web-mode wanderlust vimrc-mode smex smart-mode-line-powerline-theme seq seoul256-theme restclient relative-line-numbers projectile powerline-evil org-bullets neotree monokai-theme markdown-mode+ log4j-mode linum-relative let-alist jtags json-mode js3-mode jdee idomenu ido-vertical-mode idea-darkula-theme helm groovy-mode gradle-mode ggtags fringe-helper flyspell-popup flyspell-correct-popup flx-ido expand-region evil-surround evil-space evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-magit evil-escape evil-easymotion elscreen ecb company-web company-quickhelp company-jedi colemak-evil caroline-theme badwolf-theme autopair auto-complete android-mode airline-themes ag ace-jump-mode))))
+    (notmuch yasnippet yaml-mode writeroom-mode web-mode wanderlust vimrc-mode smex smart-mode-line-powerline-theme seq seoul256-theme restclient relative-line-numbers projectile powerline-evil org-bullets neotree monokai-theme markdown-mode+ log4j-mode linum-relative let-alist jtags json-mode js3-mode jdee idomenu ido-vertical-mode idea-darkula-theme helm groovy-mode gradle-mode ggtags fringe-helper flyspell-popup flyspell-correct-popup flx-ido expand-region evil-surround evil-space evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-magit evil-escape evil-easymotion elscreen ecb company-web company-quickhelp company-jedi colemak-evil caroline-theme badwolf-theme autopair auto-complete android-mode airline-themes ag ace-jump-mode)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
