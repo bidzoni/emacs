@@ -64,7 +64,7 @@
 (require 'logcat)
 
 (require 'expand-region)
-(global-set-key (kbd "M-w") 'er/expand-region)
+(global-set-key (kbd "\M-w") 'er/expand-region)
 
 ;; company quickhelp
 (company-quickhelp-mode 1)
@@ -168,9 +168,8 @@
 ;; org-mode and redmine integration
 (evil-leader/set-key-for-mode 'org-mode
   "O" 'org-insert-heading-respect-content ;; insert new heading
-  "o" 'org-insert-heading-after-current ;; insert new heading
-  "i" 'org-insert-heading-after-current ;; insert new heading
-  "t" 'org-todo ;; toggle todo
+  "o" 'org-insert-heading-respect-content ;; insert new heading
+  "t" 'org-insert-todo-heading ;; insert todo
   "d" 'org-deadline ;; insert deadline
   "a" 'org-agenda ;; open agenda
   "/" 'org-sparse-tree ;; sparse tree
@@ -179,17 +178,18 @@
   "gt" 'org-tracker-goto ;; open issue in redmine if possible
   "gc" 'org-tracker-create ;; create issue in redmine 
   "t" 'org-todo ;; toggle todo
-  "M-j" 'org-move-item-down
-  "M-J" 'org-move-subtree-down
-  "M-k" 'org-move-item-up
-  "M-K" 'org-move-subtree-up
+  "zk" 'outline-show-branches ;; show outline content
+  "\M-j" 'org-move-item-down
+  "\M-J" 'org-move-subtree-down
+  "\M-k" 'org-move-item-up
+  "\M-K" 'org-move-subtree-up
   "TAB" 'org-cycle ;; cycle visibility
 )
 (evil-define-key 'insert org-mode-map
-  "M-ENTER"  'org-insert-heading-after-current;; insert new heading
+  "\M-ENTER"  'org-insert-heading-after-current ;; insert new heading
 )
 
-(setq redmine-url "http://trackerdev.openhd.ru") ;; redmine url
+(setq redmine-url "http://redmine.wildred.ru") ;; redmine url
 
 (defun redmine-open-issue (id) ;; open issue function
   (browse-url (concat redmine-url "/issues/" id)))
@@ -199,8 +199,7 @@
 
 (defun org-tracker-goto (&optional pom) ;; open current issue function
   (interactive)
-  (org-with-point-at pom
-    (redmine-open-issue  (org-entry-get nil "issue"))))
+  (redmine-open-issue  (thing-at-point 'word)))
 
 (defun org-tracker-create (&optional pom) ;; create issue function
   (interactive)
@@ -431,7 +430,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (notmuch yasnippet yaml-mode writeroom-mode web-mode wanderlust vimrc-mode smex smart-mode-line-powerline-theme seq seoul256-theme restclient relative-line-numbers projectile powerline-evil org-bullets neotree monokai-theme markdown-mode+ log4j-mode linum-relative let-alist jtags json-mode js3-mode jdee idomenu ido-vertical-mode idea-darkula-theme helm groovy-mode gradle-mode ggtags fringe-helper flyspell-popup flyspell-correct-popup flx-ido expand-region evil-surround evil-space evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-magit evil-escape evil-easymotion elscreen ecb company-web company-quickhelp company-jedi colemak-evil caroline-theme badwolf-theme autopair auto-complete android-mode airline-themes ag ace-jump-mode)))
+    (csv-mode notmuch yasnippet yaml-mode writeroom-mode web-mode wanderlust vimrc-mode smex smart-mode-line-powerline-theme seq seoul256-theme restclient relative-line-numbers projectile powerline-evil org-bullets neotree monokai-theme markdown-mode+ log4j-mode linum-relative let-alist jtags json-mode js3-mode jdee idomenu ido-vertical-mode idea-darkula-theme helm groovy-mode gradle-mode ggtags fringe-helper flyspell-popup flyspell-correct-popup flx-ido expand-region evil-surround evil-space evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-magit evil-escape evil-easymotion elscreen ecb company-web company-quickhelp company-jedi colemak-evil caroline-theme badwolf-theme autopair auto-complete android-mode airline-themes ag ace-jump-mode)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
