@@ -33,7 +33,7 @@
                       js3-mode ;; java script mode
                       yaml-mode ;; yml editing mode
                       ag ;; grep on steroids
-                      evil-nerd-commenter ;; commenter plugin
+                      evil-commentary ;; commenter plugin
                       ))
 
 (require 'cl)
